@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#090d16">
+  <meta name="description" content="CampusShield — VAPT Network Security Assessment & Risk Mapping Platform">
+  <title>CampusShield — College Lab VAPT Platform</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/vendor/chart.js" defer></script>
+  <script src="/vendor/cytoscape.js" defer></script>
+  <script src="/app.js" type="module" defer></script>
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Persistent Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-shield">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z"/>
+            <path d="M9 12l2 2 4-4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="brand-title">
+          <h2>CampusShield</h2>
+          <span>VAPT Assessment Engine</span>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="sidebar-nav" id="sidebarNav">
+        <a href="#dashboard" class="nav-item active" data-page="dashboard">
+          <span class="nav-icon">▦</span>
+          <span class="nav-text">Dashboard</span>
+        </a>
+        <a href="#targets" class="nav-item" data-page="targets">
+          <span class="nav-icon">🎯</span>
+          <span class="nav-text">Targets</span>
+        </a>
+        <a href="#scans" class="nav-item" data-page="scans">
+          <span class="nav-icon">⚡</span>
+          <span class="nav-text">Network Scans</span>
+        </a>
+        <a href="#assets" class="nav-item" data-page="assets">
+          <span class="nav-icon">💻</span>
+          <span class="nav-text">Assets</span>
+        </a>
+        <a href="#vulnerabilities" class="nav-item" data-page="vulnerabilities">
+          <span class="nav-icon">🛡️</span>
+          <span class="nav-text">Vulnerabilities</span>
+          <span class="badge" id="vulnNavCount">0</span>
+        </a>
+        <a href="#graph" class="nav-item" data-page="graph">
+          <span class="nav-icon">🕸️</span>
+          <span class="nav-text">Security Graph</span>
+        </a>
+        <a href="#risk" class="nav-item" data-page="risk">
+          <span class="nav-icon">⚠️</span>
+          <span class="nav-text">Risk Analysis</span>
+        </a>
+        <a href="#packets" class="nav-item" data-page="packets">
+          <span class="nav-icon">📦</span>
+          <span class="nav-text">Packet Analysis</span>
+        </a>
+        <a href="#logs" class="nav-item" data-page="logs">
+          <span class="nav-icon">📋</span>
+          <span class="nav-text">Log Analysis</span>
+        </a>
+        <a href="#remediation" class="nav-item" data-page="remediation">
+          <span class="nav-icon">🔧</span>
+          <span class="nav-text">Remediation</span>
+        </a>
+        <a href="#reports" class="nav-item" data-page="reports">
+          <span class="nav-icon">📄</span>
+          <span class="nav-text">Reports</span>
+        </a>
+        <a href="#settings" class="nav-item" data-page="settings">
+          <span class="nav-icon">⚙️</span>
+          <span class="nav-text">Settings</span>
+        </a>
+      </nav>
+
+      <!-- Sidebar Footer -->
+      <div class="sidebar-footer">
+        <div class="legal-warning">
+          <div class="warning-dot"></div>
+          <div>
+            <strong>Authorized Testing Only</strong>
+            <p>Scan only systems you own or have explicit permission to assess.</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <div class="main-wrapper">
+      <!-- Top Header -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle Menu">☰</button>
+          <div class="breadcrumb" id="topBreadcrumb">CampusShield / <span>Dashboard</span></div>
+        </div>
+
+        <div class="topbar-right">
+          <!-- Active Mode Indicator & Switcher Button -->
+          <div class="mode-control">
+            <button class="mode-switch-btn" id="modeToggleBtn" title="Click to toggle Demo and Live Lab mode">
+              <span class="mode-indicator" id="modeIndicator"></span>
+              <span id="modeLabelText">DEMO MODE</span>
+              <span class="mode-swap-icon">⇄</span>
+            </button>
+          </div>
+
+          <!-- Quick Actions -->
+          <button class="btn btn-secondary btn-sm" id="btnQuickReport" title="Download VAPT Report PDF">
+            <span>📥</span> PDF Report
+          </button>
+          <div class="user-chip">
+            <span class="avatar">CS</span>
+            <span class="role">Lab Evaluator</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Permanent Notice Banner -->
+      <div class="scope-banner" id="scopeBanner">
+        <span class="scope-icon">🔒</span>
+        <span><strong>Laboratory Guardrail Active:</strong> CampusShield live scans are strictly restricted to private RFC 1918 subnets, loopback, or authorized lab targets.</span>
+      </div>
+
+      <!-- Dynamic Page Container -->
+      <main class="page-content" id="pageContent" role="main"></main>
+    </div>
+  </div>
+
+  <!-- Modal Container -->
+  <div class="modal-backdrop" id="modalBackdrop" style="display: none;">
+    <div class="modal-card" id="modalCard">
+      <div class="modal-header">
+        <h3 id="modalTitle">Modal Title</h3>
+        <button class="modal-close" id="modalClose">✕</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+</body>
+</html>

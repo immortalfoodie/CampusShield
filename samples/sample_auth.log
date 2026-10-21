@@ -1,0 +1,14 @@
+Oct 15 14:02:11 labsrv sshd[14221]: Failed password for invalid user admin from 192.168.56.20 port 49152 ssh2
+Oct 15 14:02:14 labsrv sshd[14223]: Failed password for invalid user admin from 192.168.56.20 port 49154 ssh2
+Oct 15 14:02:17 labsrv sshd[14225]: Failed password for invalid user root from 192.168.56.20 port 49156 ssh2
+Oct 15 14:02:20 labsrv sshd[14227]: Failed password for invalid user root from 192.168.56.20 port 49158 ssh2
+Oct 15 14:02:23 labsrv sshd[14229]: Failed password for student from 192.168.56.20 port 49160 ssh2
+Oct 15 14:02:26 labsrv sshd[14231]: Failed password for student from 192.168.56.20 port 49162 ssh2
+Oct 15 14:02:29 labsrv sshd[14233]: Failed password for student from 192.168.56.20 port 49164 ssh2
+Oct 15 14:02:32 labsrv sshd[14235]: Failed password for student from 192.168.56.20 port 49166 ssh2
+Oct 15 14:02:35 labsrv sshd[14237]: Failed password for student from 192.168.56.20 port 49168 ssh2
+Oct 15 14:02:38 labsrv sshd[14239]: Failed password for student from 192.168.56.20 port 49170 ssh2
+Oct 15 14:02:41 labsrv sshd[14241]: Failed password for student from 192.168.56.20 port 49172 ssh2
+Oct 15 14:02:44 labsrv sshd[14243]: Failed password for student from 192.168.56.20 port 49174 ssh2
+Oct 15 14:05:01 labsrv sudo:   student : 3 incorrect password attempts ; TTY=pts/0 ; PWD=/home/student ; USER=root ; COMMAND=/bin/bash
+Oct 15 14:10:12 labsrv sshd[14300]: Accepted publickey for faculty from 192.168.56.31 port 51234 ssh2

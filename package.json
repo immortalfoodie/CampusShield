@@ -1,0 +1,24 @@
+{
+  "name": "campusshield",
+  "version": "2.0.0",
+  "private": true,
+  "description": "CampusShield — contextual VAPT assessment platform for authorized college lab networks.",
+  "type": "module",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node --disable-warning=ExperimentalWarning server/index.js",
+    "dev": "node --disable-warning=ExperimentalWarning --watch server/index.js",
+    "samples": "node scripts/make-samples.js",
+    "test": "node --disable-warning=ExperimentalWarning scripts/smoke-test.js"
+  },
+  "engines": {
+    "node": ">=22.13"
+  },
+  "dependencies": {
+    "chart.js": "^4.5.1",
+    "cytoscape": "^3.34.3",
+    "express": "^4.22.3",
+    "fast-xml-parser": "^5.11.2",
+    "pdfkit": "^0.20.2"
+  }
+}

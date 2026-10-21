@@ -1,0 +1,5 @@
+node_modules/
+data/
+legacy_v1/data/
+*.log
+!samples/*.log
