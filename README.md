@@ -43,10 +43,10 @@
 **CampusShield** is an educational, graph-based Vulnerability Assessment and Penetration Testing (VAPT) and lateral-movement risk analysis platform built for college laboratory networks.
 
 Traditional vulnerability scanners operate on a naive model:
-$$\text{Scan IP} \longrightarrow \text{Detect Open Ports} \longrightarrow \text{List Unsorted CVEs}$$
+> 🎯 **Scan Target IP** &nbsp;➔&nbsp; 🔌 **Detect Open Ports** &nbsp;➔&nbsp; 📋 **List Unsorted CVEs**
 
 CampusShield introduces **relational risk contextualization**:
-$$\text{Scan \& Discover} \longrightarrow \text{Classify Findings} \longrightarrow \text{Map Graph Topology} \longrightarrow \text{Trace Risk Paths} \longrightarrow \text{Simulate What-If Remediation} \longrightarrow \text{Audit-Ready PDF}$$
+> 🔍 **Scan & Discover** &nbsp;➔&nbsp; 🏷️ **Classify Findings** &nbsp;➔&nbsp; 🕸️ **Map Graph Topology** &nbsp;➔&nbsp; 🛤️ **Trace Risk Paths** &nbsp;➔&nbsp; 🧪 **Simulate What-If** &nbsp;➔&nbsp; 📑 **Audit-Ready PDF**
 
 It evaluates security weaknesses not in isolation, but in the context of **network connections**, **access privileges**, **service exposure**, and **asset criticality**, allowing security analysts and students to prioritize the exact multi-hop pathways an attacker could traverse to compromise critical laboratory infrastructure.
 
@@ -60,7 +60,7 @@ It evaluates security weaknesses not in isolation, but in the context of **netwo
 | **Heuristic vs. Exploits** | Fabricates CVEs from mere listening ports | **Strict Tri-Tier Separation:** Distinguishes observed network exposure, rule-based heuristics, and evidence-backed vulnerabilities. |
 | **Attack Paths** | Fabricates arbitrary arrows or lists | **Deterministic Graph Traversal:** Identifies multi-hop chains traversing from untrusted entry points to critical assets. Zero fabrication on single-host scans. |
 | **Remediation Modeling** | Static checklists or post-remediation re-scans | **What-If Simulation Engine:** Dynamically previews risk score reduction for fixing vulnerabilities, blocking exposed ports, or severing relationships. |
-| **Laboratory Safety** | Open scanning capable of targeting public IPs | **Scope Guardrails:** Restricts scans strictly to RFC 1918 private IPv4, IPv6 loopback (`::1`), link-local (`fe80::/10`), ULAs, and small subnets ($\le /24$) with DNS rebinding protection. |
+| **Laboratory Safety** | Open scanning capable of targeting public IPs | **Scope Guardrails:** Restricts scans strictly to RFC 1918 private IPv4, IPv6 loopback (`::1`), link-local (`fe80::/10`), ULAs, and small subnets (≤ /24) with DNS rebinding protection. |
 | **Environment Separation** | Shared database risking demo destruction | **Dual Database Architecture:** Completely isolated storage between `data/demo.db` (5-asset campus network) and `data/live.db` (live authorized scans). |
 | **Reporting** | Basic HTML printouts | **Executive & Technical PDF Report:** Multi-page PDF generator covering all 20 audit specification sections with verified tables, rationale, and charts. |
 
@@ -155,7 +155,7 @@ CampusShield is built on a modular 5-layer decoupled architecture:
 
 Unlike proprietary black-box scanners, CampusShield calculates asset risk scores using a **deterministic, bounded, and mathematically explainable formula**:
 
-$$\text{Final Asset Score} = \min\left(100, \; \text{round}\Big(\big(\text{VulnScore} + \text{ExposureScore} + \text{RelationshipRisk}\big) \times \text{CriticalityMultiplier}\Big)\right)$$
+$$\text{Final Asset Score} = \min\left(100, \; \text{round}\left(\left(\text{VulnScore} + \text{ExposureScore} + \text{RelationshipRisk}\right) \times \text{CriticalityMultiplier}\right)\right)$$
 
 ### 1. Factor Subtotals & Category Bounds
 
@@ -231,10 +231,10 @@ To preserve its mission as an educational defense platform, CampusShield enforce
    - Private RFC 1918 IPv4: `10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`
    - IPv6 Link-Local: `fe80::/10`
    - IPv6 Unique Local Addresses (ULA): `fc00::/7`
-   - Bounded Laboratory Subnets: CIDRs $\le /24$ (e.g., `/24`, `/28`, `/30`)
+   - Bounded Laboratory Subnets: CIDRs ≤ /24 (e.g., `/24`, `/28`, `/30`)
 2. **Blocked Targets:**
    - All Public Internet IPv4 (e.g., `8.8.8.8`, `1.1.1.1`) and IPv6 addresses.
-   - Large IP blocks ($> /24$, such as `/16` or `/8`) to prevent disruptive network sweeps.
+   - Large IP blocks (> /24, such as `/16` or `/8`) to prevent disruptive network sweeps.
    - Multicast, broadcast, and invalid formats.
 3. **DNS Rebinding Guard:** Hostnames are resolved to concrete IP addresses prior to validation, ensuring the exact validated IP is passed to scanner subprocesses.
 
@@ -374,7 +374,7 @@ CampusShield/
 | `GET` | `/api/scans/:id` | Polls scan execution status, progress percentage, duration, and console logs. |
 | `POST` | `/api/scans/:id/cancel` | Gracefully cancels an active scan subprocess. |
 | `GET` | `/api/findings` | Retrieves all discovered security findings across assets. |
-| `PATCH` | `/api/findings/:id/status`| Advances finding lifecycle (`open` $\rightarrow$ `under_review` $\rightarrow$ `planned` $\rightarrow$ `fixed` $\rightarrow$ `retested`). |
+| `PATCH` | `/api/findings/:id/status`| Advances finding lifecycle (`open` → `under_review` → `planned` → `fixed` → `retested`). |
 | `POST` | `/api/findings/:id/retest`| Executes a targeted single-port probe to verify finding remediation. |
 | `GET` | `/api/relationships` | Returns all modeled and observed network connections between assets. |
 | `POST` | `/api/relationships` | Creates an access pathway with direction, nature, and supporting evidence. |
@@ -402,7 +402,7 @@ npm test
 - **[3] Scope Guard:** Loopback (`127.0.0.1`, `localhost`, `::1`), link-local (`fe80::1`), ULA (`fc00::1`), RFC 1918 subnets, and rejection of public IPs (`8.8.8.8`, `1.1.1.1`).
 - **[4] Nmap Integration:** Verifies `--top-ports 100` for Quick Discovery, `--top-ports 1000` for Standard Assessment, and structured XML extraction.
 - **[5] Findings Classification:** Validates that port 445 is classified as `exposure` with `heuristic` confidence and `cve: null`.
-- **[6] Scoring Formula Regression:** Proves that the 17-point localhost scenario ($6 \text{ vuln} + 11 \text{ exposure} = 17 \text{ pts}$) is mathematically verified and bounded by category caps.
+- **[6] Scoring Formula Regression:** Proves that the 17-point localhost scenario (6 vuln + 11 exposure = 17 pts) is mathematically verified and bounded by category caps.
 - **[7] Security Graph & Paths:** Multi-hop path identification on connected graphs; validates that single-host scans produce 0 fabricated paths.
 - **[8] What-If Simulation:** Confirms that fixing findings reduces score (-6 pts), blocking port 445 drops score (-11 pts), and raw baseline data remains immutable.
 - **[9] Offline Captures:** Validates HTTP/FTP unencrypted detection in PCAP and SSH brute-force detection in logs.
